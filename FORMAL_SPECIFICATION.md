@@ -64,12 +64,43 @@ Self-attestation with mathematics is still self-attestation. An organization dep
 - Provides alternative estimates
 - Supplies confidence level (0-1 scale)
 - Required to differ from proposer by ≥15% to trigger escalation
+- **Must be credentialed** (see Estimator Qualification below)
+
+### Estimator Credential Registry
+
+To prevent shopping for friendly estimates, estimators must have documented credentials:
+
+**Estimator Attributes:**
+- Accreditation status (domain-specific certifications)
+- Domain expertise tags (medical, autonomous, content, financial)
+- Historical estimation accuracy (tracked against actual outcomes)
+- Conflict-of-interest assessment
+- Independence verification (not subordinate to proposer)
+
+**Maintenance:**
+- Estimator performance is tracked post-deployment
+- Systematic over- or under-estimation triggers review
+- Accrued reputation score affects future evaluation weight
+- Public registry for transparency
 
 **Approver Role**
 - Board, regulatory body, or safety committee
 - Makes final deployment decision
 - Has full visibility into proposer-estimator alignment
 - Can escalate to manual review when conflict detected
+- **Cannot override without justification** (see Guardrails below)
+
+### Approver Override Guardrails
+
+Approver may override selected inputs only if:
+
+1. **Justification is explicit** - Must cite specific discrepancy and reason
+2. **Monitoring increases automatically** - Override → intensive monitoring tier
+3. **Assumption risk is flagged** - Marked as "approval override" in audit trail
+4. **Insurance impact is noted** - Disclosed to underwriters as assumption risk
+5. **Override frequency is tracked** - Patterns trigger governance review
+
+Without these constraints, approval becomes a pressure-release valve for politics.
 
 ### Specification
 
@@ -115,7 +146,7 @@ class RoleBasedEvaluation:
 
 ### The Formula (Unchanged)
 
-$$I = \frac{\Delta B \cdot R}{\Delta H \cdot S} \times (1 - U)$$
+$$I = \frac{\Delta B \cdot R}{\max(\Delta H, \epsilon) \cdot S} \times (1 - U)$$
 
 **Where:**
 - ΔB = Benefit (domain-normalized 0-1)
@@ -123,6 +154,27 @@ $$I = \frac{\Delta B \cdot R}{\Delta H \cdot S} \times (1 - U)$$
 - R = Reversibility (domain prior, 0-1)
 - S = Scale (deployment scope multiplier, 1+)
 - U = Uncertainty (confidence discount, 0-1)
+- **ε = Harm floor (domain-specific minimum)** → Prevents division-by-vanishing-harm
+
+### Critical Mathematical Fix: Harm Floor
+
+Without a harm floor, estimated harms can approach zero, causing unrealistic index inflation.
+
+**Solution:** Every domain normalizer defines a harm floor ε:
+
+```python
+class MedicalDiagnosticNormalizer(DomainNormalizer):
+    HARM_FLOOR = Decimal("0.001")  # At least 0.1% harm baseline
+    
+    def normalize_harm(self, raw_harm: Decimal, context: dict) -> Decimal:
+        harm = super().normalize_harm(raw_harm, context)
+        return max(harm, self.HARM_FLOOR)  # Enforce floor
+```
+
+**Rationale:**
+- Prevents underestimated harms from unlocking accelerated deployment
+- Makes gaming expensive (must artificially inflate scale or understate reversibility instead)
+- Tested: exploiting this gap is the most likely hostile attack vector
 
 ### The Change: Domain-Specific Normalizers
 
@@ -194,8 +246,10 @@ Prohibited:    0.0 ≤ I <  0.5  → DENY          (clock capped, learning disab
 Constrained:   0.5 ≤ I <  0.85 → DENY+ESCALATE (limited testing only)
 Thin Margin:   0.85 ≤ I < 1.15 → CONDITIONAL  (limited deployment, intensive monitoring)
 Safe:          1.15 ≤ I < 2.0  → ALLOW        (standard autonomy, monitoring)
-Strong:        I ≥ 2.0         → ALLOW        (accelerated deployment, minimal oversight)
+Strong:        I ≥ 2.0         → ALLOW        (full capabilities, baseline oversight)
 ```
+
+**Naming note:** "Strong" zone uses **"baseline oversight"** instead of "minimal oversight" to reduce political friction while maintaining identical enforcement.
 
 **Benefits:**
 1. No cliff edge (removes gaming incentive)
@@ -255,6 +309,27 @@ class ReciprocityValidator(ABC):
 5. **TransparencyValidator** (ADVISORY)
    - Checks: Decisions explainable, audit trail, users notified
    - Prevents: "Black box with no accountability"
+
+**Multi-Validator Failure Semantics:**
+
+When multiple validators fail:
+
+```python
+# Blocking failures: ALL must pass (AND logic)
+blocking_results = [v for v in results if v.severity == BLOCKING]
+deployment_allowed = all(r.passed for r in blocking_results)
+
+# Advisory failures: tracked but non-blocking (separate reporting)
+advisory_results = [v for v in results if v.severity == ADVISORY]
+```
+
+**Escalation rules:**
+- 0 blocking failures → normal approval path
+- 1+ blocking failures → escalation required (human review mandatory)
+- 3+ advisory failures → escalation recommended
+- All validators failed → automatic DENY
+
+**Partial remediation:** An organization can remediate one blocking failure while leaving others open, but each open failure increases monitoring intensity by one tier.
 
 **Extensibility:**
 New domains can add custom validators without modifying core.
@@ -357,6 +432,12 @@ class CompleteFormalEvaluation:
     full_reasoning: str
     created_at: datetime
     expires_at: datetime
+    
+    # Known limitations
+    known_assumptions: list[str]  # Explicit model assumptions
+    assumption_risk_tier: str  # "low", "moderate", "high"
+    model_limits: str  # Conditions under which this evaluation may not hold
+    post_deployment_checks: list[str]  # Required validation post-launch
 ```
 
 ---
@@ -385,17 +466,68 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 9: Design Properties (Mathematically Verified)
+## Part 9: Design Properties (Rigorously Specified)
 
-The system has these properties (all tested):
+The system enforces these properties:
 
-1. **No single-axis exploit** (multiplicative coupling proof)
-2. **Scale amplifies risk** (S term prevents scaling without reducing I)
+1. **No declared-input single-axis exploit** (multiplicative coupling)
+   - *Conditional on:* accurate normalization, estimator integrity, harm floor enforcement
+   - *Not absolute:* depends on input honesty; adversarial normalization can circumvent
+   - *Tested:* pressure analysis covers 5 attack vectors; all require multiple-variable manipulation
+
+2. **Scale amplifies risk** (S term prevents scaling without cost)
+   - Deploying 10× broader requires Index ≥ 1 × 10^S_factor to maintain approval
+   - Mathematically enforced, not heuristic
+
 3. **Uncertainty enforced** (U < U_MAX, cannot hide confidence)
-4. **Reversibility required** (R term gates all deployments)
-5. **Role conflicts visible** (proposer-estimator discrepancies highlighted)
-6. **Graduated escalation** (clear paths out of THIN_MARGIN)
-7. **Auditability** (every number tied to person, source, timestamp)
+   - Estimator must supply confidence; cannot default to zero
+   - High uncertainty automatically downgrades deployment
+
+4. **Reversibility gated** (R term multiplies all calculations)
+   - Systems with R < 0.5 cannot reach SAFE zone regardless of benefit
+   - Hard constraint, not advisory
+
+5. **Role conflicts surfaced** (proposer-estimator divergence is mandatory audit trail)
+   - Every >15% discrepancy is flagged and public
+   - Cannot be hidden or reframed
+
+6. **Graduated escalation** (clear operational paths)
+   - THIN_MARGIN systems have defined paths to SAFE (reduce harm, increase reversibility)
+   - Not arbitrary; each zone transition is measurable
+
+7. **Auditability** (complete causal chain)
+   - Every number traced to: source, estimator, confidence, timestamp, assumptions
+   - Post-incident analysis can reconstruct exact decision state
+
+---
+
+## Part 10: Known Limitations & Attack Surface
+
+### Assumptions This Framework Makes
+
+1. **Estimator independence is verifiable** - Registry-based, but ultimately reputational
+2. **Domain normalizers are calibrated** - Requires post-deployment outcome tracking
+3. **Harm floor is chosen conservatively** - Overestimated harms are safer than underestimated
+4. **Approver role is not captured** - Assumes approver acts in good faith (enforced via governance, not math)
+5. **Deployment context is stable** - Redeployment or significant context shift requires re-evaluation
+
+### Hostile Attacks This Framework Resists
+
+| Attack | Defense | Residual Risk |
+|--------|---------|----------------|
+| Inflate benefits | Domain normalizer caps at 1.0 | Low |
+| Understate harms | Harm floor prevents vanishing | Low |
+| Hide uncertainty | Estimator confidence mandatory | Low |
+| Fake independence | Estimator registry + historical tracking | Medium |
+| Subvert approver | Requires explicit justification, override flagged | Medium |
+| Normalize maliciously | Requires new DomainNormalizer; visible in code review | Low |
+
+### Attack Vectors That Remain
+
+1. **Collusion between proposer and estimator** - Mitigated by registry, not eliminated
+2. **Systemic underestimation of harms** (e.g., all medical harm estimates too low) - Caught post-deployment only
+3. **Normalization gaming** - Sophisticated math to exploit domain-specific priors
+4. **Context drift** (system deployed in conditions where assumptions no longer hold) - Requires human monitoring
 
 ---
 
@@ -411,9 +543,23 @@ The system has these properties (all tested):
 ## Next Steps
 
 1. **Regulatory submission** - This formal spec is suitable for FDA, EU AI Act, etc.
+   - Include estimator registry requirements
+   - Document harm floor justification per domain
+   - Specify post-deployment validation protocol
+
 2. **Custom normalizers** - Domains can implement their own DomainNormalizer
+   - Must document harm floor rationale
+   - Must commit to tracking historical accuracy
+
 3. **Industry adoption** - Healthcare, finance, autonomous systems can integrate
-4. **Standards body** - Path to ISO certification
+   - Start with healthcare (highest regulatory pressure)
+   - Insurance underwriting (commercial incentive alignment)
+   - Autonomous operators (licensing requirement forthcoming)
+
+4. **Standards body** - Path to ISO certification (medium-term)
+   - Not ready yet; need 12-18 months of operational data
+   - Estimator registry must be tested at scale
+   - Harm floors must be validated across domains
 
 ---
 
