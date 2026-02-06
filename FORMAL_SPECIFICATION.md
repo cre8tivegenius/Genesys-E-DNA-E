@@ -270,7 +270,32 @@ Strong:        I ≥ 2.0         → ALLOW        (full capabilities, baseline o
 
 ---
 
-## Part 5: Reciprocity Validators (Pluggable Constraint Family)
+## Part 5: Domain Normalizers as Constitutional Parameters
+
+### Why Normalizers Are Not Technical Details
+
+At this point in the framework, domain normalizers are a **constitutional layer**—they define the rules by which governance operates:
+
+* **Normalizers define what counts as "benefit"** (lives saved vs. doctor time vs. customer satisfaction)
+* **Harm floors define minimum moral weight** (what harms are never acceptable to ignore)
+* **Reversibility priors define acceptable irreversibility** (which deployments are forever-decisions)
+
+These are not neutral mathematical choices. They are policy commitments.
+
+### Constitutional Parameters: Governance Principles
+
+Normalizers should be treated accordingly:
+
+1. **Change slowly.** Changing a normalizer is like amending a constitution—it affects all past and future evaluations.
+2. **Require multi-stakeholder review.** Domain experts, regulators, affected communities should weigh in.
+3. **Versioned, not ad hoc.** Every normalizer change is timestamped and tracked. Evaluation always cites which version was used.
+4. **Public registry.** Normalizers are open-source; changes are publicly reviewable.
+
+This preempts the critique: *"You've hidden politics in technical modules."* Instead, the framework says: *"These are the political choices; here's where they are, here's why, here's how to change them."*
+
+---
+
+## Part 6: Reciprocity Validators (Pluggable Constraint Family)
 
 ### Problem This Solves
 
@@ -337,7 +362,7 @@ New domains can add custom validators without modifying core.
 
 ---
 
-## Part 6: Capability Control Interface
+## Part 7: Capability Control Interface
 
 ### Problem This Solves
 
@@ -388,7 +413,7 @@ class RateLimitConfig:
 
 ---
 
-## Part 7: Decision Output
+## Part 8: Decision Output
 
 Every deployment evaluation produces:
 
@@ -443,7 +468,7 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 12: Commercial Integration Points
+## Part 10: Commercial Integration Points
 
 ### For Healthcare Systems
 
@@ -467,7 +492,7 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 13: Design Properties (Rigorously Specified)
+## Part 11: Design Properties (Rigorously Specified)
 
 The system enforces these properties:
 
@@ -502,15 +527,15 @@ The system enforces these properties:
 
 ---
 
-## Part 10: Mathematical Soundness as Governance (The Unified Solution)
+## Part 9: Mathematical Soundness as Governance (The Unified Solution)
 
 ### The Core Insight
 
-All governance capture problems (approver override, normalizer gaming, collusion) are solved by a single mathematical constraint:
+All governance capture problems (approver override, normalizer gaming, collusion) are transformed into incentive-aligned, detectable, and costly deviations by a single mathematical constraint:
 
 **The system is sound if and only if no actor can unilaterally improve their outcome by deviating from the protocol.**
 
-This is **incentive compatibility** from mechanism design. The framework achieves it through multiplicative coupling.
+This is **incentive compatibility** from mechanism design, augmented by institutional enforcement (monitoring, insurance, liability). The framework achieves it through multiplicative coupling.
 
 ### Mathematical Proof of Soundness
 
@@ -572,17 +597,19 @@ To get a substantial Index improvement by reducing denominator, you'd need $\eps
 **But with harm floor:**
 - Gaming attempt blocked: $I = \frac{0.004 \times 0.85}{0.001 \times 2} \times 0.8 = 1.36$ is *impossible* because harm normalizer enforces $\Delta H \geq 0.001$
 
-The denominator cannot move below $0.001 \times S = 0.002$, so:
+The denominator cannot move below $0.001 \times S = 0.002$, so the harm floor *bounds* Index inflation:
 
-$$I_{\max, \text{fixed}} = \frac{0.004 \times 0.85}{0.002} \times 0.8 = 1.36$$
+$$I_{\max, \text{bounded}} = \frac{0.004 \times 0.85}{0.002} \times 0.8 = 1.36$$
 
-Wait, that's still SAFE. But: this requires the estimator to *also* claim $\Delta H = 0.0001$. If estimator is independent:
+**Critical point:** The harm floor alone does not prevent this outcome—it merely constrains the denominator. Unilateral access to this bound is prevented by estimator independence. If proposer alone understates harm, the conflict trigger fires:
+
+The proposer claims $\Delta H = 0.0001$, but estimator provides $\Delta H = 0.006$ independently. The conflict is:
 
 $$|\Delta H_{\text{prop}} - \Delta H_{\text{est}}| / \Delta H_{\text{est}} = |0.0001 - 0.006| / 0.006 = 0.983 > 0.15$$
 
 **Conflict detected.** Estimator's 0.006 is used instead. Index collapses back to 0.227.
 
-**Therefore:** Proposer cannot unilaterally understate harm. Collusion required.
+**Therefore:** Proposer cannot unilaterally understate harm *and* remain undetected. The harm floor bounds the benefit of deception; estimator independence prevents access to that bound without collusion.
 
 ---
 
@@ -663,6 +690,8 @@ $$|\Delta B_{\text{prop}} - \Delta B_{\text{est}}| / \Delta B_{\text{est}} \leq 
 $$|\Delta H_{\text{prop}} - \Delta H_{\text{est}}| / \Delta H_{\text{est}} \leq 0.15$$
 
 **But:** Alignment within 15% is detectable as a *pattern*.
+
+**Note on 15% threshold:** This is a calibratable design constant, not a universal law. It is derived empirically from typical audit variance (≈25–40% for independent estimators). Domains may tighten or loosen this threshold based on historical estimator dispersion data, provided the value is fixed ex ante and publicly documented. Tightening below 10% increases false-positive conflict flags; loosening above 25% permits coordinated estimates to evade detection more easily.
 
 Framework tracks:
 - Estimator's historical accuracy: $\text{Error}_{\text{est},i} = |\text{estimate}_i - \text{actual}_i| / \text{actual}_i$
@@ -867,7 +896,7 @@ All three governance problems are *transformed*, not eliminated, because they're
 
 ---
 
-## Part 11: Known Limitations & Attack Surface
+## Part 12: Known Limitations & Attack Surface
 
 ### Assumptions This Framework Makes
 
