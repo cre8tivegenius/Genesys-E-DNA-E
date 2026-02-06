@@ -13,6 +13,7 @@ This document formalizes the Genesys-E-DNA-E framework in response to critical f
 - Domain-specific normalization
 - Pluggable reciprocity validators
 - Concrete capability control implementations
+- **Mathematical soundness as governance** (incentive compatibility via multiplicative coupling)
 
 ---
 
@@ -442,7 +443,7 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 8: Commercial Integration Points
+## Part 12: Commercial Integration Points
 
 ### For Healthcare Systems
 
@@ -466,7 +467,7 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 9: Design Properties (Rigorously Specified)
+## Part 13: Design Properties (Rigorously Specified)
 
 The system enforces these properties:
 
@@ -501,7 +502,95 @@ The system enforces these properties:
 
 ---
 
-## Part 10: Known Limitations & Attack Surface
+## Part 10: Mathematical Soundness as Governance (The Unified Solution)
+
+### The Core Insight
+
+All governance capture problems (approver override, normalizer gaming, collusion) are solved by a single mathematical constraint:
+
+**The system is sound if and only if no actor can unilaterally improve their outcome by deviating from the protocol.**
+
+This is **incentive compatibility** from mechanism design. The framework achieves it through multiplicative coupling.
+
+### Mathematical Proof of Soundness
+
+**Theorem:** If $I = \frac{\Delta B \cdot R}{\max(\Delta H, \epsilon) \cdot S} \times (1 - U)$ with enforcement of all five variables, then:
+1. No single-variable manipulation improves Index unilaterally
+2. Collusion requires multiple conspirators
+3. Approver override is detectable
+4. Normalizer gaming is visible in code review
+
+**Proof sketch:**
+
+Any attempt to improve Index by manipulating one variable requires compensatory manipulation in another:
+
+- **Inflate ΔB alone?** → Index improves, but $R$ is domain prior (cannot change). Zone stays same or requires higher $S$ (larger deployment = more scrutiny).
+- **Understate ΔH?** → Harm floor $\epsilon$ prevents vanishing. Minimum denominator is $\epsilon \cdot S$, so denominator barely moves. Gaming expensive.
+- **Increase R?** → Domain prior, controlled by independent normalizer. Proposer cannot change.
+- **Decrease S?** → Lower Index. Counterproductive.
+- **Hide U?** → Estimator must provide confidence. If U = 0 (false certainty), system flags as unrealistic. If U > 0.3, Index downgrades.
+
+**Therefore:** Any single attack requires compensatory attack in a different variable. This creates **joint incentive compatibility**:
+- Proposer and estimator must collude (observable via >15% discrepancy)
+- Approver must override (flagged and monitored)
+- Multiple actors must act in concert (governance detectable)
+
+### Why Each Component Is Necessary
+
+If you remove any component, the system becomes **incentive incompatible** (vulnerable to unilateral gaming):
+
+| Component | If Removed | Result |
+|-----------|-----------|--------|
+| Harm floor (ε) | $\max(\Delta H, \epsilon)$ becomes $\Delta H$ | Denominator → 0, Index → ∞. Single-variable exploit exists. |
+| Estimator role | No independent estimate | Proposer estimates alone. Self-attestation with math. Approver has no check. |
+| >15% discrepancy trigger | Estimator alignment hidden | Collusion becomes invisible. Approver never knows conflict exists. |
+| Monitoring escalation on override | Approver override hidden | Political pressure gets decision undetected. No audit trail. |
+| Scale multiplier (S) | $I = \frac{\Delta B \cdot R}{\max(\Delta H, \epsilon)} \times (1 - U)$ | Broader deployment no longer increases required Index. Gaming incentive at boundary. |
+| Uncertainty discount (U) | Confidence requirement removed | Estimator can claim certainty falsely. Index artificially inflated. |
+| Reversibility gate (R) | $I = \frac{\Delta B}{\max(\Delta H, \epsilon) \cdot S} \times (1 - U)$ | Irreversible systems (R → 0) can still reach SAFE zone. Risk unconstrained. |
+
+**Each removal creates a unilateral exploit vector.**
+
+### The Governance Problems Are Actually Mathematical Problems
+
+Reframed:
+
+1. **Approver capture** = "Can approver unilaterally change decision without cost?"
+   - **Mathematical solution:** Monitoring escalation on override makes cost explicit (higher monitoring tier). Override becomes decision + constraint, not decision alone.
+
+2. **Normalizer gaming** = "Can proposer choose normalizer to inflate Index?"
+   - **Mathematical solution:** Domain normalizer is independent (chosen by third party, not proposer). Harm floor ε prevents normalization tricks. Proposer cannot achieve single-variable improvement.
+
+3. **Collusion** = "Can proposer + estimator together inflate Index?"
+   - **Mathematical solution:** Any joint manipulation requires >15% discrepancy (observable) OR requires changing domain prior R (controlled by independent normalizer) OR requires scale choice S (observable, increases scrutiny). All paths leave audit trail.
+
+### What Breaks If System Becomes Mathematically Unsound
+
+If you weaken any mathematical constraint:
+
+- **Remove harm floor?** → Undershooting harm becomes unilateral win. No need for collusion.
+- **Remove scale multiplier?** → All deployments treated same. Larger scope has same governance burden as smaller scope. Incentive to deceive on scope.
+- **Weaken discrepancy threshold from 15%?** → Estimator can be much closer to proposer (10% = practically aligned). Estimator becomes "friendly checker," not independent.
+- **Remove role separation?** → Back to self-attestation. Math provides no constraint on inputs.
+
+**Each of these makes a different governance failure inevitable.**
+
+### The Unified Principle
+
+**The framework works because it makes the governance structure and mathematical structure the same thing.**
+
+You cannot separate them. The math enforces governance. Governance cannot override math without breaking the Index contract.
+
+This is why:
+- Approver override doesn't "solve" approver capture; it makes capture *detectable and expensive*
+- Estimator registry doesn't prevent collusion; it makes collusion *require multiple conspirators and leave evidence*
+- Normalizer specification doesn't prevent gaming; it makes gaming *visible in code review*
+
+All three governance problems are *transformed*, not eliminated, because they're all symptoms of **incentive incompatibility**. The math fixes incentive compatibility.
+
+---
+
+## Part 11: Known Limitations & Attack Surface
 
 ### Assumptions This Framework Makes
 
