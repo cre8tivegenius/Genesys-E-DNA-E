@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/api/routers/evaluations.py
+# hypothesis_version: 6.151.5
+
+[200, 201, 404, '/evaluations', '/evaluations/quick', 'Evaluation not found', 'Proposal not found', 'evaluation_completed', 'system']

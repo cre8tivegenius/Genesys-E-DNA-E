@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/api/routers/health.py
+# hypothesis_version: 6.151.5
+
+['/health', '/health/ready', 'ok', 'ready', 'status']

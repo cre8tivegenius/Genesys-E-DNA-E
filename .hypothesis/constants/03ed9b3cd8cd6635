@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/config.py
+# hypothesis_version: 6.151.5
+
+[8000, '.env', '0.0.0.0', '0.05', '0.3', '0.5', '0.7', '5', 'BODHISATTVA_', 'INFO', 'utf-8']

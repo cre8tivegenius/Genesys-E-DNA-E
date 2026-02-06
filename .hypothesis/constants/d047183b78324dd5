@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/db/repository.py
+# hypothesis_version: 6.151.5
+
+['1', 'action', 'actor', 'bodhisattva_index', 'details', 'evaluation_id', 'growth_permitted', 'id', 'json', 'proposal_id', 'timestamp']

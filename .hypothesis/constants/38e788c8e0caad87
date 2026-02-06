@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/db/models.py
+# hypothesis_version: 6.151.5
+
+[100, 255, 500, 'EvaluationRow', 'ProposalRow', 'action', 'actor', 'audit_log', 'ck_proposals_r_range', 'ck_proposals_u_range', 'compliance_reports', 'decision', 'delta_b >= 0', 'delta_h > 0', 'domain', 'draft', 'evaluated_at', 'evaluations', 'evaluations.id', 'is_compliant', 'ix_audit_action', 'ix_audit_actor', 'ix_audit_proposal_id', 'ix_audit_timestamp', 'ix_proposals_domain', 'ix_proposals_status', 'proposal', 'proposal_id', 'proposals', 'proposals.id', 'r >= 0 AND r <= 1', 's > 0', 'status', 'submitted_at', 'timestamp', 'u >= 0 AND u <= 1']
