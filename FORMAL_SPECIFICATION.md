@@ -537,6 +537,8 @@ All governance capture problems (approver override, normalizer gaming, collusion
 
 This is **incentive compatibility** from mechanism design, augmented by institutional enforcement (monitoring, insurance, liability). The framework achieves it through multiplicative coupling.
 
+**Scope of incentive compatibility:** Evaluated with respect to *declared inputs, enforced controls, and observable actions*—not internal intent or hidden states. Governance acts on externally observable deviation, not inner motivation. This design is intentional: institutions can audit behavior; they cannot audit conscience.
+
 ### Mathematical Proof of Soundness
 
 **Theorem:** If $I = \frac{\Delta B \cdot R}{\max(\Delta H, \epsilon) \cdot S} \times (1 - U)$ with enforcement of all five variables, then:
