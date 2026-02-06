@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/pipeline/checks.py
+# hypothesis_version: 6.151.5
+
+['1', 'benefit_exceeds_harm', 'checks', 'delta_b', 'delta_h', 'gate_allow_growth', 'index', 'passed', 'r', 'threshold', 'u', 'u_max', 'value']

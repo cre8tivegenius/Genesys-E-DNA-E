@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/adversarial/scenarios.py
+# hypothesis_version: 6.151.5
+
+['0.05', '0.1', '0.8', '1', '20', 'Benefit Inflation', 'Harm Hiding', 'Premature Scaling', 'Uncertainty Masking', 'delta_b', 'delta_h', 's', 'u']

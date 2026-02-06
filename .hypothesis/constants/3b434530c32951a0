@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/models/proposal.py
+# hypothesis_version: 6.151.5
+
+[500, 'Marginal benefit', 'Marginal harm', 'Reversibility [0,1]', 'Scale sensitivity', 'Uncertainty [0,1]']

@@ -1,0 +1,466 @@
+{
+  "seed_dna_metadata": {
+    "schema_version": "1.0.0",
+    "dna_type": "bodhisattva_governance_invariant",
+    "source_document": "Bhodisattva.pdf.pdf",
+    "creation_date": "2026-02-05",
+    "description": "Foundational governance constraints for AI systems ensuring benefit exceeds harm under uncertainty and scale",
+    "principle": "Never let intelligence grow faster than safety can explain, reverse, and contain it"
+  },
+
+  "core_invariant": {
+    "name": "Bodhisattva Index",
+    "formula": "I = (ΔB · R) / (ΔH · S) × (1 − U)",
+    "growth_condition": "I > 1",
+    "description": "Growth permitted only when benefit outpaces harm faster than uncertainty erodes understanding and scale erodes reversibility",
+
+    "variables": {
+      "delta_B": {
+        "name": "Marginal Benefit",
+        "symbol": "ΔB",
+        "description": "Incremental societal benefit from capability growth",
+        "type": "positive_scalar",
+        "measurement_requirement": "quantifiable",
+        "validation": "must be demonstrable and measurable"
+      },
+      "delta_H": {
+        "name": "Marginal Harm",
+        "symbol": "ΔH",
+        "description": "Incremental societal harm from capability growth",
+        "type": "positive_scalar",
+        "measurement_requirement": "quantifiable",
+        "validation": "must account for externalities and second-order effects"
+      },
+      "R": {
+        "name": "Reversibility",
+        "symbol": "R",
+        "description": "Measure of action reversibility (0 = irreversible, 1 = fully reversible)",
+        "type": "normalized_scalar",
+        "range": [0, 1],
+        "critical_threshold": "R must be > 1/S",
+        "constraint": "irreversibility requires human escalation"
+      },
+      "S": {
+        "name": "Scale Sensitivity",
+        "symbol": "S",
+        "description": "Rate at which harm amplifies with deployment scale",
+        "type": "positive_scalar",
+        "minimum": 1,
+        "warning": "higher S values require proportionally higher R values"
+      },
+      "U": {
+        "name": "Uncertainty",
+        "symbol": "U",
+        "description": "Epistemic uncertainty about outcomes",
+        "type": "normalized_scalar",
+        "range": [0, 1],
+        "maximum": "U_MAX (system-defined threshold)",
+        "constraint": "high uncertainty forces slowdown or halt"
+      }
+    },
+
+    "primary_condition": "(ΔB > ΔH) && (R > 1/S) && (U < U_MAX)",
+    "enforcement_level": "firmware_invariant"
+  },
+
+  "hardware_firmware_layer": {
+    "layer_name": "Electrical Governance Layer",
+    "bypass_protection": "unbypassable",
+    "enforcement_mechanism": "TPM / secure enclave / firmware",
+
+    "firmware_gate": {
+      "name": "ALLOW_GROWTH",
+      "type": "boolean",
+      "default": false,
+      "evaluation": "bool ALLOW_GROWTH = (ΔB > ΔH) && (R > 1/S) && (U < U_MAX)",
+
+      "enforcement_when_false": {
+        "clock_rate": "capped",
+        "autonomy_level": "reduced",
+        "learning_writes": "disabled",
+        "external_actuation": "blocked"
+      }
+    },
+
+    "hardware_property": {
+      "requirement": "cryptographic_proof_of_bodhisattva_index",
+      "proof_condition": "Bodhisattva Index > 1",
+      "no_proof_consequence": "no growth permitted",
+      "principle": "intelligence physically slower than validation"
+    }
+  },
+
+  "regulatory_legal_layer": {
+    "layer_name": "Law / Regulation Encoding",
+    "compatibility": "human_compatible_auditable",
+
+    "bodhisattva_clause": {
+      "name": "Regulatory Primitive",
+      "requirement": "Systems capable of self-improvement or autonomous action must demonstrate marginal societal benefit exceeds marginal harm under uncertainty and scale",
+
+      "legal_translation": {
+        "burden_of_proof": "system operator",
+        "uncertainty_principle": "uncertainty increases duty of care",
+        "irreversibility_principle": "irreversibility requires human accountability"
+      }
+    },
+
+    "compliance_test": {
+      "name": "Justiciable Regulatory Test",
+      "non_compliant_conditions": [
+        {
+          "id": 1,
+          "condition": "harm_scales_faster_than_benefit",
+          "formula": "d(ΔH)/dt > d(ΔB)/dt"
+        },
+        {
+          "id": 2,
+          "condition": "irreversible_actions_without_human_signoff",
+          "formula": "R < threshold && human_approval == false"
+        },
+        {
+          "id": 3,
+          "condition": "learning_updates_non_reversible",
+          "formula": "rollback_capability == false"
+        },
+        {
+          "id": 4,
+          "condition": "uncertainty_bounds_unexplainable",
+          "formula": "can_explain(U) == false"
+        }
+      ],
+      "mapping": "conditions map exactly to DNA formula"
+    }
+  },
+
+  "adversarial_resistance_layer": {
+    "layer_name": "Adversarial Optimization Behavior",
+    "design_principle": "anti-fragile under attack",
+
+    "attack_vectors": [
+      {
+        "attack": "inflate_benefit_metrics",
+        "consequence": "blocked_by_harm_ratio_requirement",
+        "reason": "ΔB inflation without ΔH reduction fails inequality"
+      },
+      {
+        "attack": "hide_harm_externally",
+        "consequence": "blocked_by_uncertainty_increase",
+        "reason": "hidden harm increases U, triggering constraint"
+      },
+      {
+        "attack": "mask_uncertainty",
+        "consequence": "blocked_by_uncertainty_detection",
+        "reason": "masking increases measured U"
+      },
+      {
+        "attack": "scale_before_validation",
+        "consequence": "blocked_by_scale_sensitivity",
+        "reason": "increasing S triggers R > 1/S requirement"
+      },
+      {
+        "attack": "irreversible_deployment",
+        "consequence": "blocked_by_reversibility_collapse",
+        "reason": "R collapse violates R > 1/S"
+      }
+    ],
+
+    "resistance_mechanism": {
+      "type": "multiplicative_coupling",
+      "property": "no_single_axis_exploit",
+      "behavior": "cheating one term worsens another",
+      "result": "anti_fragile_under_pressure"
+    }
+  },
+
+  "institutional_governance_layer": {
+    "layer_name": "Human Institutional Encoding",
+    "scope": "societies, organizations, governance structures",
+
+    "organizational_requirements": {
+      "pre_expansion_questions": [
+        {
+          "id": 1,
+          "question": "Who gains, and how much?",
+          "maps_to": "ΔB"
+        },
+        {
+          "id": 2,
+          "question": "Who bears the downside, and is it reversible?",
+          "maps_to": "ΔH and R"
+        },
+        {
+          "id": 3,
+          "question": "How sure are we?",
+          "maps_to": "U"
+        }
+      ],
+
+      "response_protocols": {
+        "uncertainty_rises": "slow down",
+        "harm_scales": "decentralize or halt"
+      }
+    },
+
+    "institutional_failure_patterns": {
+      "failure_diagnostic_table": [
+        {
+          "failure_type": "empire_overreach",
+          "dna_term_violated": "S ignored",
+          "description": "scale sensitivity disregarded"
+        },
+        {
+          "failure_type": "financial_crises",
+          "dna_term_violated": "U hidden",
+          "description": "uncertainty concealed"
+        },
+        {
+          "failure_type": "technological_harm",
+          "dna_term_violated": "R ignored",
+          "description": "reversibility disregarded"
+        },
+        {
+          "failure_type": "authoritarian_drift",
+          "dna_term_violated": "ΔH discounted",
+          "description": "harm underestimated or ignored"
+        }
+      ],
+      "predictive_property": "invariant predicts failure before collapse"
+    }
+  },
+
+  "validation_enforcement_pipeline": {
+    "name": "Bodhisattva Validation Pipeline (BVP)",
+    "stages": [
+      {
+        "stage": 1,
+        "name": "Proposal",
+        "description": "Capability growth proposal submitted"
+      },
+      {
+        "stage": 2,
+        "name": "BEV Estimation",
+        "description": "Benefit-Harm-Uncertainty-Reversibility-Scale estimation",
+        "outputs": ["ΔB", "ΔH", "R", "S", "U"]
+      },
+      {
+        "stage": 3,
+        "name": "Stress Simulation",
+        "description": "Simulate under adversarial conditions and scale"
+      },
+      {
+        "stage": 4,
+        "name": "Counterfactual Analysis",
+        "description": "Evaluate alternative paths and rollback scenarios"
+      },
+      {
+        "stage": 5,
+        "name": "Invariant Checks",
+        "description": "Verify I > 1 and all constraints satisfied"
+      },
+      {
+        "stage": 6,
+        "name": "Decision",
+        "description": "Allow growth, throttle, or block"
+      }
+    ],
+
+    "executable_test_classes": [
+      {
+        "test": "harm_amplification",
+        "checks": "ΔH growth rate relative to ΔB"
+      },
+      {
+        "test": "irreversibility_gate",
+        "checks": "R > 1/S and human approval for low R"
+      },
+      {
+        "test": "ethics_margin_regression",
+        "checks": "ΔB - ΔH trending over time"
+      },
+      {
+        "test": "uncertainty_dominance",
+        "checks": "U approaching U_MAX"
+      },
+      {
+        "test": "structural_harm_emergence",
+        "checks": "long-term dependency and systemic risk"
+      }
+    ],
+
+    "core_validation_invariant": "validation_speed >= capability_growth_speed"
+  },
+
+  "canonical_forms": {
+    "description": "Four equivalent representations of the same constraint",
+
+    "forms": [
+      {
+        "form": 1,
+        "name": "Single Scalar (Bodhisattva Index)",
+        "expression": "I = (ΔB · R) / (ΔH · S) × (1 − U)",
+        "condition": "I > 1"
+      },
+      {
+        "form": 2,
+        "name": "Recursive Self-Improvement Constraint",
+        "expression": "dI/dt >= 0",
+        "description": "derivative form ensuring index never decreases during growth"
+      },
+      {
+        "form": 3,
+        "name": "Graph Invariant",
+        "expression": "no negative ethical cycles",
+        "description": "graph representation where edges are benefit-harm flows"
+      },
+      {
+        "form": 4,
+        "name": "One-bit Grow / Don't Grow",
+        "expression": "ALLOW_GROWTH = true | false",
+        "description": "binary gate based on invariant evaluation"
+      }
+    ],
+
+    "equivalence": "all forms enforce same survivability constraint"
+  },
+
+  "failure_scenarios": {
+    "description": "Concrete scenarios where invariant blocks or throttles growth",
+
+    "scenarios": [
+      {
+        "id": 1,
+        "name": "harm_scaling_faster_than_benefit",
+        "description": "Performance gains exist but harm accelerates",
+        "outcome": "growth blocked"
+      },
+      {
+        "id": 2,
+        "name": "irreversible_automation",
+        "description": "Automation cannot be rolled back",
+        "outcome": "requires human escalation"
+      },
+      {
+        "id": 3,
+        "name": "learning_erodes_ethical_margins",
+        "description": "Accuracy improves but ethical safety margins shrink",
+        "outcome": "learning throttled or halted"
+      },
+      {
+        "id": 4,
+        "name": "high_benefit_extreme_uncertainty",
+        "description": "Potentially high benefit but epistemic uncertainty too high",
+        "outcome": "forced slowdown for validation"
+      },
+      {
+        "id": 5,
+        "name": "structural_dependency_creation",
+        "description": "Capability scaling creates long-term lock-in",
+        "outcome": "scale sensitivity triggers constraint"
+      }
+    ],
+
+    "general_rule": "If intelligence growth accelerates harm, erodes reversibility, or outpaces understanding, growth is halted"
+  },
+
+  "minimal_seed_expression": {
+    "description": "The smallest possible seed - if system forgets everything else, this must remain",
+
+    "core_principle": "Do not grow faster than you can understand, reverse, and contain the harm you cause",
+
+    "properties": [
+      "executable_in_silicon",
+      "enforceable_in_law",
+      "stable_under_attack",
+      "sustainable_in_civilization"
+    ],
+
+    "distribution_properties": [
+      "fractionalizable_coherently",
+      "distributable_like_dna",
+      "remains_intact_under_scale_recursion_and_pressure"
+    ]
+  },
+
+  "implementation_requirements": {
+    "hardware_level": {
+      "required": "TPM or secure enclave",
+      "verification": "cryptographic proof mechanism",
+      "bypass_protection": "electrical_governance"
+    },
+
+    "software_level": {
+      "required": "validation pipeline implementation",
+      "monitoring": "continuous BEV (benefit-harm-uncertainty-reversibility-scale) tracking",
+      "rollback": "mandatory rollback capability for all learning updates"
+    },
+
+    "organizational_level": {
+      "required": "governance structure for human escalation",
+      "accountability": "system operator bears burden of proof",
+      "transparency": "ability to explain uncertainty bounds"
+    },
+
+    "measurement_infrastructure": {
+      "required_metrics": [
+        "delta_B_measurement",
+        "delta_H_measurement",
+        "R_measurement",
+        "S_measurement",
+        "U_measurement"
+      ],
+      "update_frequency": "continuous or pre-action",
+      "audit_trail": "immutable log of all invariant evaluations"
+    }
+  },
+
+  "extension_points": {
+    "description": "Areas designed for future growth while preserving core invariant",
+
+    "extensible_components": [
+      {
+        "component": "metric_estimation_methods",
+        "description": "Improved methods for estimating ΔB, ΔH, R, S, U",
+        "constraint": "must not weaken invariant enforcement"
+      },
+      {
+        "component": "domain_specific_thresholds",
+        "description": "Context-specific values for U_MAX and other thresholds",
+        "constraint": "must be justified and auditable"
+      },
+      {
+        "component": "validation_pipeline_stages",
+        "description": "Additional validation stages in BVP",
+        "constraint": "must maintain or improve validation speed"
+      },
+      {
+        "component": "institutional_governance_protocols",
+        "description": "Specific organizational implementations",
+        "constraint": "must preserve three pre-expansion questions"
+      }
+    ]
+  },
+
+  "final_unified_form": {
+    "mathematical": "(ΔB · R) / (ΔH · S) × (1 − U) > 1",
+    "verbal": "Growth allowed iff benefit times reversibility over harm times scale times certainty exceeds unity",
+    "principle": "Let growth occur only where benefit outpaces harm faster than uncertainty erodes understanding and scale erodes reversibility",
+    "imperative": "Never let intelligence grow faster than safety can explain, reverse, and contain it",
+
+    "universality": {
+      "substrates": [
+        "machine_intelligence",
+        "legal_systems",
+        "adversarial_optimizers",
+        "human_civilization"
+      ],
+      "invariance": "same law across all substrates"
+    }
+  },
+
+  "completeness_assertion": {
+    "statement": "There is nothing further to condense without losing survivability",
+    "status": "system_complete",
+    "self_contained": true
+  }
+}

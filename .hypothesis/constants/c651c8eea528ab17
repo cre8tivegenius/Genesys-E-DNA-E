@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/firmware/crypto_proof.py
+# hypothesis_version: 6.151.5
+
+['delta_b', 'delta_h', 'r', 's', 'u']

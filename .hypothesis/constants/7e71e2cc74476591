@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/pipeline/stress.py
+# hypothesis_version: 6.151.5
+
+['0', '0.2', '0.3', '1', '2', '3', 'baseline_index', 'combined_worst_case', 'growth_permitted', 'harm_amplification', 'index', 'name', 'passed', 'scale_increase', 'scenarios', 'scenarios_surviving', 'total_scenarios', 'uncertainty_increase']

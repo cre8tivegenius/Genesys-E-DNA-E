@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/pipeline/bvp.py
+# hypothesis_version: 6.151.5
+
+[1000, ' | ', '0.5', 'bev_estimation', 'error', 'invariant_checks', 'passed', 'stress_simulation']
