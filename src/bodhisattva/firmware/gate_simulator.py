@@ -1,8 +1,14 @@
 """
-Firmware Gate Simulator.
+Capability Control Interface (formerly "Firmware Gate").
 
-Simulates the TPM/secure enclave one-bit gate from spec Section I.
-When ALLOW_GROWTH == false, enforces capability throttling.
+Provides graduated capability escalation based on Bodhisattva Index.
+Implements the three mechanisms:
+1. Secure enclave signing
+2. Token-gated features
+3. Rate-limited APIs
+
+This avoids the "firmware" framing that sounds threatening while keeping
+the core idea: capabilities are unlocked only with cryptographic proof of safety.
 """
 
 from __future__ import annotations

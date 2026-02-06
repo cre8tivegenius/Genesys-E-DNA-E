@@ -66,12 +66,16 @@ ALLOW = (I > 1) && (∂JFI/∂t > 0) && (Δ < Δ_MAX)
 
 ## Features
 
+- **Role-based evaluation** - Proposer/Estimator/Approver separation prevents self-attestation
+- **Graduated zones** - Five escalation levels instead of binary threshold, prevents gaming
+- **Domain-specific normalization** - Medical, content moderation, autonomous systems have different measurement scales
+- **Pluggable reciprocity validators** - Concrete checks: workforce impact, performance parity, human oversight
+- **Capability Control Interface** - Three mechanisms: enclave tokens, feature tokens, rate-limited APIs
 - **Multi-stage validation pipeline** - Adversarial testing, compliance checking, firmware constraints
-- **Cryptographic proof system** - HMAC-SHA256 signed growth decisions
-- **Graduated autonomy constraints** - Clock throttling, capability escalation based on risk
+- **Cryptographic proof system** - HMAC-SHA256 signed deployment authorizations
 - **Property-based testing** - Exhaustive invariant verification with Hypothesis
 - **Institutional compliance** - Regulatory violation detection and remediation guidance
-- **Adversarial resilience** - Multiplicative coupling proof and pressure analysis
+- **Full audit trail** - Every decision traced to person, input source, timestamp
 
 ## Project Structure
 
@@ -160,7 +164,8 @@ pytest tests/ --cov=src/bodhisattva --cov-report=html
 
 ## Documentation
 
-- [UNIFIED_FRAMEWORK_SUMMARY.md](UNIFIED_FRAMEWORK_SUMMARY.md) - Complete framework specification
+- [FORMAL_SPECIFICATION.md](FORMAL_SPECIFICATION.md) - Complete mathematical and operational specification (V2.0)
+- [UNIFIED_FRAMEWORK_SUMMARY.md](UNIFIED_FRAMEWORK_SUMMARY.md) - Original framework overview
 - [SEED_DNA_SUMMARY.md](SEED_DNA_SUMMARY.md) - Bodhisattva DNA principles
 - Configuration: See [pyproject.toml](pyproject.toml) for all dependencies
 

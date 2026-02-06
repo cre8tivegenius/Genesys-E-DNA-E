@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/core/reciprocity.py
+# hypothesis_version: 6.151.5
+
+[3600, '0.7', '1', '2', '50000', 'FAIL', 'PASS', 'WARNINGS', 'advisory', 'all', 'autonomous_vehicles', 'baseline_accuracy', 'blocking', 'commercial', 'content_moderation', 'economic_fairness', 'human_jobs_affected', 'human_jobs_created', 'human_jobs_lost', 'human_oversight', 'inf', 'medical', 'model_accuracy', 'performance_parity', 'rollback_available', 'transparency', 'workforce_impact']

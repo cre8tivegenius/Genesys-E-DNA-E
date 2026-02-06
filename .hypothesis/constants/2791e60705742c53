@@ -1,0 +1,4 @@
+# file: /Users/aiegrows/HAPFEED/freq/src/bodhisattva/core/zones.py
+# hypothesis_version: 6.151.5
+
+['0', '0.5', '0.85', '1.15', '2.0', 'ALLOW', 'CONDITIONAL', 'DENY', 'accelerated', 'all_blocked', 'clock_rate_capped', 'constrained', 'escalation_required', 'intensive', 'limited_deployment', 'minimal', 'prohibited', 'safe', 'standard', 'strong', 'thin_margin']
