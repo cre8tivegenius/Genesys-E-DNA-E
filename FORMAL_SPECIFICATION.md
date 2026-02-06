@@ -13,7 +13,45 @@ This document formalizes the Genesys-E-DNA-E framework in response to critical f
 - Domain-specific normalization
 - Pluggable reciprocity validators
 - Concrete capability control implementations
-- **Mathematical soundness as governance** (incentive compatibility via multiplicative coupling)
+- **Mathematical soundness as governance** (unilateral strategy-resistance via multiplicative coupling)
+
+---
+
+## Definitions & Scope
+
+### Input Variables
+
+- **ΔB (Benefit)**: Domain-normalized scalar, 0-1. Proposer and estimator each declare independently; conflict flagged if |prop-est|/est > τ (default τ=15%).
+- **ΔH (Harm)**: Domain-normalized scalar, 0-1. Same conflict detection logic. Bounded below by harm floor ε > 0 (set by normalizer).
+- **R (Reversibility)**: Domain prior (not proposer input), fixed by normalizer version. Scalar, 0-1. Controls how easily deployment can be undone.
+- **S (Scale)**: Deployment scope multiplier, ≥1. Derived from observable scope declaration (e.g., number of hospitals, geographic region). Conflict triggered if scope estimates differ >τ.
+- **U (Uncertainty)**: Estimator-supplied confidence discount, 0-1. Proposer does not input U; estimator provides based on data quality and methodology.
+
+### Key Terms
+
+- **Observable declaration**: External, measurable, auditable commitment (e.g., "deployment in 5 hospitals," "annual monitoring budget $X"). Not internal intent.
+- **Materially improve outcome**: Change that shifts zone classification (Prohibited→Constrained, etc.) or reduces required monitoring tier.
+- **Unilateral deviation**: Single actor changes their declared input or action; other roles' inputs held constant.
+- **Enforcement assumption**: Institutional condition under which protocol guarantees hold (e.g., estimator independence verifiable, monitoring escalation executed mechanically, overrides logged).
+
+### Protocol Guarantees & Threat Model
+
+This framework operates under explicit enforcement assumptions:
+
+**Does guarantee (given enforcement):**
+- Unilateral single-variable manipulation of declared inputs cannot materially improve outcome without triggering estimator override, mandatory escalation, and/or priced costs (monitoring, insurance, liability).
+
+**Does not guarantee (residual risks acknowledged):**
+- Collusion among multiple roles (proposer + estimator) — mitigated by pattern detection and de-credentialing, not prevented.
+- Systemic bias in normalizer definition — caught post-deployment via outcome tracking.
+- Context drift after deployment — requires human monitoring and re-evaluation.
+- Resistance to capture of normalizer governance process itself — defended by constitutional principles and multi-stakeholder review, not mathematics.
+
+**Assumes:**
+- Estimator independence is verifiable (reputational/registry-based).
+- Monitoring escalation is enforced mechanically (not discretionary).
+- Overrides are logged and legally discoverable (persistent in liability regime).
+- Domain normalizers are calibrated conservatively (overestimated harms safer than underestimated).
 
 ---
 
@@ -172,10 +210,20 @@ class MedicalDiagnosticNormalizer(DomainNormalizer):
         return max(harm, self.HARM_FLOOR)  # Enforce floor
 ```
 
+**Mechanism: Harm floor bounds inflation; estimator independence blocks unilateral access**
+
+The harm floor prevents the denominator from approaching zero, thereby **bounding** the maximum Index achievable via harm minimization:
+
+$$I(\Delta H) = \frac{\Delta B\cdot R}{\max(\Delta H,\epsilon)\cdot S}(1-U) \quad\Rightarrow\quad I_{\max}=\frac{\Delta B\cdot R}{\epsilon\cdot S}(1-U)$$
+
+Thus, a proposer who understates harm cannot drive $I\to\infty$; they can only attempt to reach the bound $I(\Delta H=\epsilon)$. 
+
+**Unilateral access to this bound is blocked by role separation:** If the estimator provides an independent $\Delta H_{\text{est}}$ that diverges beyond the discrepancy threshold (>15%), the estimator value is selected and the attempt fails. The proposer cannot unilaterally exploit the bound without triggering mandatory escalation and estimator override.
+
 **Rationale:**
-- Prevents underestimated harms from unlocking accelerated deployment
-- Makes gaming expensive (must artificially inflate scale or understate reversibility instead)
-- Tested: exploiting this gap is the most likely hostile attack vector
+- Harm floor mathematically caps inflation; estimator independence prevents sole access to that cap.
+- Makes gaming expensive: proposer must rely on estimator collusion to exploit the bound.
+- Tested: this combination (floor + role separation) blocks the most likely hostile attack vector.
 
 ### The Change: Domain-Specific Normalizers
 
@@ -468,7 +516,7 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 10: Commercial Integration Points
+## Part 9: Commercial Integration Points
 
 ### For Healthcare Systems
 
@@ -492,7 +540,7 @@ class CompleteFormalEvaluation:
 
 ---
 
-## Part 11: Design Properties (Rigorously Specified)
+## Part 10: Design Properties (Rigorously Specified)
 
 The system enforces these properties:
 
@@ -527,25 +575,36 @@ The system enforces these properties:
 
 ---
 
-## Part 9: Mathematical Soundness as Governance (The Unified Solution)
+## Part 11: Protocol Guarantees & Threat Model (Mathematical Soundness as Governance)
 
 ### The Core Insight
 
-All governance capture problems (approver override, normalizer gaming, collusion) are transformed into incentive-aligned, detectable, and costly deviations by a single mathematical constraint:
+All governance capture problems (approver override, normalizer gaming, collusion) are transformed into observable, costly deviations constrained by a single mathematical structure:
 
-**The system is sound if and only if no actor can unilaterally improve their outcome by deviating from the protocol.**
+**The protocol is unilaterally strategy-resistant** with respect to declared inputs: no single actor can materially improve the deployment permission outcome by misreporting any single input variable without triggering (i) estimator override, (ii) mandatory escalation, and/or (iii) mechanically increased monitoring/insurance/liability exposure.
 
-This is **incentive compatibility** from mechanism design, augmented by institutional enforcement (monitoring, insurance, liability). The framework achieves it through multiplicative coupling.
+This is achieved through **unilateral strategy-resistance** (a controlled form of incentive incompatibility), not through claims of moral alignment or dominant-strategy truthfulness. The framework:
 
-**Scope of incentive compatibility:** Evaluated with respect to *declared inputs, enforced controls, and observable actions*—not internal intent or hidden states. Governance acts on externally observable deviation, not inner motivation. This design is intentional: institutions can audit behavior; they cannot audit conscience.
+- Governs **observable declarations and enforced controls**, not internal intent.
+- Makes strategy-resistant guarantees **conditional on enforcement assumptions** (independent estimator, discrepancy-triggered selection, logged overrides, automatic cost escalation).
+- Acknowledges residual risks (collusion, normalizer capture) and mitigates them with pattern detection and governance, not mathematics.
+
+**Scope of guarantees:** Evaluated with respect to *declared inputs, enforced controls, and observable actions*—not hidden states or unverifiable intent. Governance acts on externally observable deviation, not inner motivation. This design is intentional: institutions can audit behavior; they cannot audit conscience.
 
 ### Mathematical Proof of Soundness
 
-**Theorem:** If $I = \frac{\Delta B \cdot R}{\max(\Delta H, \epsilon) \cdot S} \times (1 - U)$ with enforcement of all five variables, then:
-1. No single-variable manipulation improves Index unilaterally
-2. Collusion requires multiple conspirators
-3. Approver override is detectable
-4. Normalizer gaming is visible in code review
+**Theorem (Protocol-level manipulation resistance; conditional).** Let 
+
+$$I = \frac{\Delta B \cdot R}{\max(\Delta H, \epsilon)\cdot S}(1-U)$$
+
+with $\epsilon>0$ fixed by the domain normalizer, $R$ fixed by the normalizer version, and with the following enforcement rules:
+
+1. For each input $x\in\{\Delta B,\Delta H,S,U\}$, if $\frac{|x_{\text{prop}}-x_{\text{est}}|}{x_{\text{est}}}>\tau$ (default $\tau=0.15$), then $x_{\text{est}}$ is selected and escalation is triggered.
+2. Any approver override is logged and triggers automatic increases in monitoring intensity and disclosed assumption risk.
+
+Then, for any single actor acting alone (proposer alone, estimator alone, or approver alone in an override decision), any unilateral deviation in a single declared input cannot improve the deployment permission outcome (cannot shift to a materially better zone) without triggering an enforcement response (selection override and/or mandatory escalation and/or priced costs).
+
+**Residual risk:** Coordinated collusion among multiple roles (proposer + estimator) and/or capture of the normalizer governance process. These are mitigated (not eliminated) by pattern detection, de-credentialing, and constitutional procedures.
 
 ---
 
@@ -678,7 +737,7 @@ Conflict detected. Estimator's 0.25 is used.
 
 ---
 
-#### Proof 2: Collusion Is Detectable
+#### Proof 2: Collusion Becomes Statistically Suspicious and Governance-Actionable
 
 **Scenario:** Proposer and estimator collude to inflate Index.
 
@@ -686,12 +745,12 @@ Joint manipulation strategy:
 - Proposer claims high ΔB and low ΔH
 - Estimator "independently" confirms similar estimates
 
-For this to work without detection, they need:
+For this to work without flagging escalation, they need:
 
 $$|\Delta B_{\text{prop}} - \Delta B_{\text{est}}| / \Delta B_{\text{est}} \leq 0.15$$
 $$|\Delta H_{\text{prop}} - \Delta H_{\text{est}}| / \Delta H_{\text{est}} \leq 0.15$$
 
-**But:** Alignment within 15% is detectable as a *pattern*.
+**But:** Collusion cannot be ruled out mathematically. The framework instead makes collusion **harder to sustain without producing audit signals** by tracking estimator behavior across deployments. Sustained anomalous alignment patterns trigger mandatory manual review and potential estimator de-credentialing.
 
 **Note on 15% threshold:** This is a calibratable design constant, not a universal law. It is derived empirically from typical audit variance (≈25–40% for independent estimators). Domains may tighten or loosen this threshold based on historical estimator dispersion data, provided the value is fixed ex ante and publicly documented. Tightening below 10% increases false-positive conflict flags; loosening above 25% permits coordinated estimates to evade detection more easily.
 
@@ -715,6 +774,20 @@ if mean_divergence < 0.15:
 ```
 
 **Therefore:** Sustained collusion triggers pattern detection and mandatory human review.
+
+---
+
+### Governance Principle: Normalizer Governance as Security Boundary
+
+Normalizer definitions (benefit semantics, harm floors, reversibility priors, scale mappings) are treated as **constitutional parameters**, not technical implementation details. Proposers may propose normalizer changes, but cannot unilaterally adopt them for evaluation.
+
+**Adoption process:**
+- Versioned, multi-stakeholder approval required.
+- All evaluations cite the normalizer version used.
+- Changes are timestamped and audit-trailed.
+- Proposers cannot upload custom normalizers for self-serving benefit inflation.
+
+**Security rationale:** This closes the "proposer adopts inflated normalizer" loophole at the policy layer, not just visibility. The goal is not to prove collusion impossible, but to ensure collusion is **costly, brittle, and legible**.
 
 ---
 
